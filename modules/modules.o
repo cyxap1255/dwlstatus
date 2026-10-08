@@ -1,0 +1,24 @@
+ELF>X@@�H�(H5H=dH%(H$1H�$H�D�HtfH$ H��2@H�H5H|$1�HTH51H|$�HھH|$�HuH��H$ H$HLf��f���H5HHHI�HH
+H�HI�H*�H$H
+�H*�HD�Y��Y�(�Z��\��Z�H$dH+%(H�(�H$ �ff.�H�dH<%(H$H��1H�H$H5�H$dH+%(HĘ��ff.�H�8H5H=dH%(H$(1H�DH�D$H�D$�HtXH$0H��$fHL$HT1LD$H5H|$ �HھH|$ �Hu�H��H$0LD$HL$1H5HT�H$(dH+%(H�8�H$0�fff.�H�8H5H=H$0dH%(H$1H�D�H5HH=�H��DHTH51H|$�H�H|$�Hu�H��HT1H5�H$dH+%(uZH$0H�8�H=�H�Hu�HTH51H|$�H�H|$�Hu��sH$(�@ff.�H�H=dH4%(HH5�HtbH$H��0H5H��H�H5�1�HھH��Hu�H��H$HdH+%(H��H$�f�SH=H�dH4%(HH5�HtIH¾H�H��Ht)H5H��H�H5�1�H��H5H=�H�HtFH¾H��Ht)H5H��H�H5�1�H��H5H=�H�HtFH¾H��Ht)H5H��H�H5�1�H��HdH+%(u	H�[��@ff.�H�H=dH4%(HH5�Ht>H¾H��Ht)H5H��H�H5�1�HdH+%(H���r/proc/meminfoMemTotal: %ld kBMemAvailable: %ld kBRAM: %.2fGi/%.2fGi | KERN: %s %s/proc/driver/rtcrtc_time	: %ld:%ld:%ld%02ld:%02ld:%02ld%ldBAT: %ld%% | 
+CPU: %s | 
+NET: %s | VOL: %s%% | /sys/class/power_supply/BAT0/capacity/sys/class/power_supply/BAT1/capacityLC_ALL=C top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8 "%"}'nmcli -g GENERAL.CONNECTION device show wlp0s20f3wpa_cli -i wlp0s20f3 status 2>/dev/null | grep '^ssid=' | cut -d= -f2iwctl station wlp0s20f3 show 2>/dev/null | grep 'Connected network' | awk '{print $3}'wpctl get-volume @DEFAULT_AUDIO_SINK@:GCC: (Gentoo 16.2.1_p20260926 p1) 16.2.1 20260926GNU GNU	zRx
+                                                                  $RKD^�                                                          A
+                                                                                                                                  HDbKQ
+                     A
+                                                                                                                                  $`�KNP�|
+                     A
+                                                                                                                                  H 1Kr
+                     A
+                                                                                                                                  R KqZ�Z
+                     A
+                                                                                                                                  H$�aENG
+A
+ K                                                                                                                                A
+                                                                                                                                  ��
+ !$6)L.X3i8=CIO(UP[agmsy�hR��`b�����1
+                                     %,�a;@modules.c.LC0.LC1.LC2.LC3.LC4.LC5.LC6.LC7.LC8.LC9.LC10.LC12.LC13.LC11.LC14.LC15.LC16.LC17.LC18.LC19.LC20.LC21.LC22.LC23output_ramfopen__isoc23_sscanffgetsfclose__printf_chk__stack_chk_failoutput_kernelunameoutput_timeoutput_batteryoutput_cpupopenstrcspnpcloseoutput_networkoutput_volume>^jv�& N!#	!��
+D
+ N`m
+*@L^ky ���!6;'[c(r} )�!�' ((7B J)QX]'u( )'���( 
+                                               )-!Nfk'( �! H`d����@.symtab.strtab.shstrtab.rela.text.data.bss.rodata.str1.1.rodata&12�@2Opr\0tta.cs3e.commeut.note.PNU-sta@k.note.gnu.property.rela.eh_frame @�x
