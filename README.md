@@ -15,7 +15,7 @@ sudo make uninstall
 rm dwlstatus
 ```
 # Configuration
-modules structure configuration file – modules/modules.c
+modules structure configuration file – modules/modules.c,
 configuration file for modules displayed on the bar – dwlstatus.c
 
 # Credits
