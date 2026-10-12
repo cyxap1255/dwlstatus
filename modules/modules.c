@@ -1,30 +1,5 @@
 #include <stdio.h>
 #include <unistd.h>
-#include "modules/modules.h"
-
-int main(void) {
-	while (1) {
-		FILE *fo = freopen("/tmp/dwl-bar", "w", stdout);
-		if (fo != NULL) {
-
-			output_network();
-			printf(" | ");
-			output_cpu();
-			printf(" | ");
-			output_ram();
-			printf(" | ");
-			output_time();	 
-			printf("\n");                                  	          
-
-			fflush(stdout);
-		}
-		sleep(1);
-	}
-	return 0;
-}
-~ $ cat dwlstatus/modules/modules.c
-#include <stdio.h>
-#include <unistd.h>
 #include <sys/utsname.h>
 #include <stdlib.h>
 #include <string.h>
