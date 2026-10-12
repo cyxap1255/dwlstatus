@@ -8,5 +8,6 @@ void output_battery(void);
 void output_cpu(void);
 void output_network(void);
 void output_volume(void);
+void output_date(void);
 
-#endi
+#endif
