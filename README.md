@@ -14,6 +14,17 @@ cd dwlstatus
 sudo make uninstall
 rm dwlstatus
 ```
+# Modules
+- memory
+- kernel name
+- time
+- battery
+- cpu usage
+- network (ssid)
+- volume
+- date
+- more soon..
+
 # Configuration
 modules structure configuration file – modules/modules.c,
 configuration file for modules displayed on the bar – dwlstatus.c
