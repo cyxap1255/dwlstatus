@@ -1,5 +1,30 @@
 #include <stdio.h>
 #include <unistd.h>
+#include "modules/modules.h"
+
+int main(void) {
+	while (1) {
+		FILE *fo = freopen("/tmp/dwl-bar", "w", stdout);
+		if (fo != NULL) {
+
+			output_network();
+			printf(" | ");
+			output_cpu();
+			printf(" | ");
+			output_ram();
+			printf(" | ");
+			output_time();	 
+			printf("\n");                                  	          
+
+			fflush(stdout);
+		}
+		sleep(1);
+	}
+	return 0;
+}
+~ $ cat dwlstatus/modules/modules.c
+#include <stdio.h>
+#include <unistd.h>
 #include <sys/utsname.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +48,7 @@ void output_ram(void) {
 	float real_free_ram = free_ram / 1024.0f;
 	float real_used_ram = real_total_ram - real_free_ram;
 
-	printf("RAM: %.2fGi/%.2fGi | ", real_used_ram, real_total_ram);
+	printf("RAM: %.2fGi/%.2fGi", real_used_ram, real_total_ram);
 }
 
 void output_kernel(void) {
@@ -82,7 +107,7 @@ void output_cpu(void) {
 	if (fp) {
 		while (fgets(buff, sizeof(buff), fp)) {
 			buff[strcspn(buff, "\r\n")] = 0;
-			printf("CPU: %s | ", buff);
+			printf("CPU: %s", buff);
 		}
 	pclose(fp);	
 	}
@@ -94,8 +119,13 @@ void output_network(void) {
 
 	if ((fp = popen("nmcli -g GENERAL.CONNECTION device show wlp0s20f3", "r"))) {
 		if (fgets(buff2, sizeof(buff2), fp)) {
-			buff2[strcspn(buff2, "\n")] = 0;
-			printf("NET: %s | ", buff2);
+			if ((fp = popen("nmcli -g GENERAl.CONNECTIOn device show wlp0s20f3", "r")) == NULL) {
+				printf("NET: NULL");
+			} else {
+				buff2[strcspn(buff2, "\n")] = 0;
+				printf("NET: %s", buff2);
+			}
+
 		}
 		pclose(fp);
 	}
@@ -103,7 +133,7 @@ void output_network(void) {
 	if ((fp = popen("wpa_cli -i wlp0s20f3 status 2>/dev/null | grep '^ssid=' | cut -d= -f2", "r"))) {
 		if (fgets(buff2, sizeof(buff2), fp)) {
 			buff2[strcspn(buff2, "\n")] = 0;
-			printf("NET: %s | ", buff2);
+			printf("NET: %s", buff2);
 		}
 		pclose(fp);
 	}
@@ -111,7 +141,7 @@ void output_network(void) {
 	if ((fp = popen("iwctl station wlp0s20f3 show 2>/dev/null | grep 'Connected network' | awk '{print $3}'", "r"))) {
 		if (fgets(buff2, sizeof(buff2), fp)) {
 			buff2[strcspn(buff2, "\n")] = 0;
-			printf("NET: %s | ", buff2);
+			printf("NET: %s", buff2);
 		}
 		pclose(fp);
 	}
@@ -124,7 +154,22 @@ void output_volume(void) {
 	if ((fp = popen("wpctl get-volume @DEFAULT_AUDIO_SINK@", "r"))) {
 		if (fgets(buff3, sizeof(buff3), fp)) {
 			buff3[strcspn(buff3, "\n")] = 0;
-			printf("VOL: %s%% | ", buff3);
+			printf("VOL: %s%%", buff3);
 		}
 	}
+}
+
+void output_date(void) {
+	long year = 0, month = 0, month_day = 0;
+	FILE *f = fopen("/proc/driver/rtc", "r");
+	if (f) {
+		char line3[256];
+		while (fgets(line3, sizeof(line3), f)) {
+			sscanf(line3, "rtc_date	: %ld-%ld-%ld", &year, &month, &month_day);
+		}
+
+		fclose(f);
+	}
+
+	printf("%02ld:%02ld:%02ld", month_day, month, year);
 }
