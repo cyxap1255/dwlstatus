@@ -29,5 +29,10 @@ rm dwlstatus
 modules structure configuration file – modules/modules.c,
 configuration file for modules displayed on the bar – dwlstatus.c
 
+# Usage
+```bash
+dwl | dwlstatus
+```
+
 # Credits
 Inspired by [suckless slstatus](https://github.com/drkhsh/slstatus).
