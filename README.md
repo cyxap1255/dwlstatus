@@ -20,7 +20,9 @@ rm dwlstatus
 - time
 - battery
 - cpu usage
-- network (ssid)
+- network (ssid) (nmcli)
+- network (ssid) (wpa_supplicant)
+- network (ssid) (iwctl)
 - volume
 - date
 - more soon..
