@@ -11,8 +11,7 @@ make && sudo make install
 # Uninstallation
 ```bash
 cd dwlstatus
-sudo make uninstall
-rm dwlstatus
+sudo make uninstall && sudo make clean
 ```
 # Modules
 - memory
