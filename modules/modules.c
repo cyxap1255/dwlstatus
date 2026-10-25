@@ -88,32 +88,10 @@ void output_cpu(void) {
 	}
 }
 
-void output_network(void) {
+void output_network_nmcli(void) {
 	char buff2[256];
 	FILE *fp;
-
 	if ((fp = popen("nmcli -g GENERAL.CONNECTION device show wlp0s20f3", "r"))) {
-		if (fgets(buff2, sizeof(buff2), fp)) {
-			if ((fp = popen("nmcli -g GENERAl.CONNECTIOn device show wlp0s20f3", "r")) == NULL) {
-				printf("NET: NULL");
-			} else {
-				buff2[strcspn(buff2, "\n")] = 0;
-				printf("NET: %s", buff2);
-			}
-
-		}
-		pclose(fp);
-	}
-
-	if ((fp = popen("wpa_cli -i wlp0s20f3 status 2>/dev/null | grep '^ssid=' | cut -d= -f2", "r"))) {
-		if (fgets(buff2, sizeof(buff2), fp)) {
-			buff2[strcspn(buff2, "\n")] = 0;
-			printf("NET: %s", buff2);
-		}
-		pclose(fp);
-	}
-
-	if ((fp = popen("iwctl station wlp0s20f3 show 2>/dev/null | grep 'Connected network' | awk '{print $3}'", "r"))) {
 		if (fgets(buff2, sizeof(buff2), fp)) {
 			buff2[strcspn(buff2, "\n")] = 0;
 			printf("NET: %s", buff2);
@@ -122,14 +100,38 @@ void output_network(void) {
 	}
 }
 
+void output_network_wpa(void) {
+	char buff3[256];
+	FILE *fp;
+	if ((fp = popen("wpa_cli -i wlp0s20f3 status 2>/dev/null | grep '^ssid=' | cut -d= -f2", "r"))) {
+		if (fgets(buff3, sizeof(buff3), fp)) {
+			buff3[strcspn(buff3, "\n")] = 0;
+			printf("NET: %s", buff3);
+		}
+		pclose(fp);
+	}
+}
+
+void output_network_iwctl(void) {
+	char buff4[256];
+	FILE *fp;
+	if ((fp = popen("iwctl station wlp0s20f3 show 2>/dev/null | grep 'Connected network' | awk '{print $3}'", "r"))) {
+		if (fgets(buff4, sizeof(buff4), fp)) {
+			buff4[strcspn(buff4, "\n")] = 0;
+			printf("NET: %s", buff4);
+		}
+		pclose(fp);
+	}
+}
+
 
 void output_volume(void) {
 	FILE *fp;
-	char buff3[256];
+	char buff5[256];
 	if ((fp = popen("wpctl get-volume @DEFAULT_AUDIO_SINK@", "r"))) {
-		if (fgets(buff3, sizeof(buff3), fp)) {
-			buff3[strcspn(buff3, "\n")] = 0;
-			printf("VOL: %s%%", buff3);
+		if (fgets(buff5, sizeof(buff5), fp)) {
+			buff5[strcspn(buff5, "\n")] = 0;
+			printf("VOL: %s%%", buff5);
 		}
 	}
 }
