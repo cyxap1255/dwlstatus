@@ -31,6 +31,9 @@ modules structure configuration file – modules/modules.c,
 configuration file for modules displayed on the bar – dwlstatus.c
 
 # Usage
+## For dwl v0.7
+you need to make a session script like this:
+
 ```bash
 dwl | dwlstatus
 ```
