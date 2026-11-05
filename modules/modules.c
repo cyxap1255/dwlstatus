@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern const char *net_int;
+
 void output_ram(void) {
 	long total_ram = 0, free_ram = 0;
 	FILE *f = fopen("/proc/meminfo", "r");
@@ -23,13 +25,13 @@ void output_ram(void) {
 	float real_free_ram = free_ram / 1024.0f;
 	float real_used_ram = real_total_ram - real_free_ram;
 
-	printf("RAM: %.2fGi/%.2fGi", real_used_ram, real_total_ram);
+	printf("mem: %.2fGi/%.2fGi", real_used_ram, real_total_ram);
 }
 
 void output_kernel(void) {
 	struct utsname kernel;
 	uname(&kernel);
-	printf("KERN: %s %s", kernel.sysname, kernel.release);
+	printf("kern: %s %s", kernel.sysname, kernel.release);
 }
 
 void output_time(void) {
@@ -52,73 +54,75 @@ void output_battery(void) {
 	FILE *f = fopen("/sys/class/power_supply/BAT0/capacity", "r");
 	if (f == NULL) {
 		f = fopen("/sys/class/power_supply/BAT1/capacity", "r");
-		if (f) {
-			char line3[256];
-			while (fgets(line3, sizeof(line3), f)) {
-				sscanf(line3, "%ld", &bat);
-			}
+		char line3[256];
+		while (fgets(line3, sizeof(line3), f)) {
+			sscanf(line3, "%ld", &bat);
 		}
 		fclose(f);
-
-	printf("BAT: %ld%% | ", bat);
+		printf("bat: %ld%%", bat);
 
 	} else {
-		f = fopen("/sys/class/power_supply/BAT0/capacity", "r");
 		char line4[256];
 		while (fgets(line4, sizeof(line4), f)) {
 			sscanf(line4, "%ld", &bat);
 		}
 	fclose(f);
 
-	printf("BAT: %ld%% | ", bat);
+	printf("bat: %ld%%", bat);
 
 	}
 }
 
 void output_cpu(void) {
 	char buff[256];
-	const char *cpu_command = "LC_ALL=C top -bn1 | grep \"Cpu(s)\" | awk '{print 100 - $8 \"%\"}'";
-	FILE *fp = popen(cpu_command, "r");
+	FILE *fp;
+	fp = popen("LC_ALL=C top -bn1 | grep \"Cpu(s)\" | awk '{print 100 - $8 \"%\"}'", "r");
 	if (fp) {
-		while (fgets(buff, sizeof(buff), fp)) {
+		if (fgets(buff, sizeof(buff), fp)) {
 			buff[strcspn(buff, "\r\n")] = 0;
-			printf("CPU: %s", buff);
+			printf("cpu: %s", buff);
 		}
 	pclose(fp);	
 	}
 }
 
 void output_network_nmcli(void) {
+	char cmd[256];
 	char buff2[256];
+	snprintf(cmd, sizeof(cmd), "nmcli -g GENERAL.CONNECTION device show %s", net_int);
 	FILE *fp;
-	if ((fp = popen("nmcli -g GENERAL.CONNECTION device show wlp0s20f3", "r"))) {
+	if ((fp = popen(cmd, "r"))) {
 		if (fgets(buff2, sizeof(buff2), fp)) {
 			buff2[strcspn(buff2, "\n")] = 0;
-			printf("NET: %s", buff2);
+			printf("net: %s", buff2);
 		}
 		pclose(fp);
 	}
 }
 
 void output_network_wpa(void) {
+	char cmd2[256];
 	char buff3[256];
+	snprintf(cmd2, sizeof(cmd2), "wpa_cli -i %s status 2>/dev/null | grep '^ssid=' | cut -d= -f2", net_int);
 	FILE *fp;
-	if ((fp = popen("wpa_cli -i wlp0s20f3 status 2>/dev/null | grep '^ssid=' | cut -d= -f2", "r"))) {
+	if ((fp = popen(cmd2, "r"))) {
 		if (fgets(buff3, sizeof(buff3), fp)) {
 			buff3[strcspn(buff3, "\n")] = 0;
-			printf("NET: %s", buff3);
+			printf("net: %s", buff3);
 		}
 		pclose(fp);
 	}
 }
 
 void output_network_iwctl(void) {
+	char cmd3[256];
 	char buff4[256];
+	snprintf(cmd3, sizeof(cmd3), "iwctl station %s show 2>/dev/null | grep 'Connected network' | awk '{print $3}'", net_int);
 	FILE *fp;
-	if ((fp = popen("iwctl station wlp0s20f3 show 2>/dev/null | grep 'Connected network' | awk '{print $3}'", "r"))) {
+	if ((fp = popen(cmd3, "r"))) {
 		if (fgets(buff4, sizeof(buff4), fp)) {
 			buff4[strcspn(buff4, "\n")] = 0;
-			printf("NET: %s", buff4);
+			printf("net: %s", buff4);
 		}
 		pclose(fp);
 	}
@@ -131,8 +135,9 @@ void output_volume(void) {
 	if ((fp = popen("wpctl get-volume @DEFAULT_AUDIO_SINK@", "r"))) {
 		if (fgets(buff5, sizeof(buff5), fp)) {
 			buff5[strcspn(buff5, "\n")] = 0;
-			printf("VOL: %s%%", buff5);
+			printf("vol: %s%%", buff5);
 		}
+		pclose(fp);
 	}
 }
 
