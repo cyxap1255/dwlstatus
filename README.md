@@ -26,7 +26,7 @@ cd dwlstatus
 sudo make uninstall && sudo make clean
 ```
 
-# Uninstallation - doas
+## Uninstallation - doas
 ```bash
 cd dwlstatus
 doas make uninstall && doas make clean
