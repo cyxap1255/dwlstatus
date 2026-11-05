@@ -4,15 +4,32 @@ link to [bar patch](https://codeberg.org/dwl/dwl-patches/src/commit/9e89b5823fe1
 ![glfetch screenshot](swappy-20261008_213755.png)
 
 # Installation
+
+## Installation - sudo
 ```bash
 git clone https://github.com/cyxap1255/dwlstatus
 cd dwlstatus
 make && sudo make install
 ```
+## Installation - doas
+```bash
+git clone https://github.com/cyxap1255/dwlstatus
+cd dwlstatus
+make && doas make install
+```
+
 # Uninstallation
+
+## Uninstallation - sudo 
 ```bash
 cd dwlstatus
 sudo make uninstall && sudo make clean
+```
+
+# Uninstallation - doas
+```bash
+cd dwlstatus
+doas make uninstall && doas make clean
 ```
 # Modules
 - memory
