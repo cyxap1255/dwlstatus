@@ -10,9 +10,10 @@ static const unsigned int interval = 1; /* refresh time */
 const char *net_int = "wlp0s20f3"; /* network interface */
 
 static const struct block blocks[] = { 
-	{ output_cpu,	" | " },
-	{ output_ram, 	" | " },
-	{ output_time,	""    },
+	/*module*/   	/*space between module*/
+	{ output_cpu,					" | " },
+	{ output_ram, 					" | " },
+	{ output_time,					""    },
 };
 
 #endif 
