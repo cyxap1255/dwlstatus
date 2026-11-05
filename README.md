@@ -26,10 +26,11 @@ sudo make uninstall && sudo make clean
 - volume
 - date
 - more soon..
+# Updates
+- added config.def.h file
 
 # Configuration
-modules structure configuration file – modules/modules.c,
-configuration file for modules displayed on the bar – dwlstatus.c
+config.def.h - configuration file
 
 # Usage
 ## For dwl v0.7/v0.8 and bar patch v0.7/v0.8
@@ -48,6 +49,5 @@ just use:
 ```bash
 dwl | dwlstatus
 ```
-
 # Credits
 Inspired by [suckless slstatus](https://github.com/drkhsh/slstatus).
