@@ -47,7 +47,7 @@ doas make uninstall && doas make clean
 - added config.def.h file
 
 # Configuration
-config.def.h - configuration file
+- config.def.h - configuration file
 
 # Usage
 ## For dwl v0.7/v0.8 and bar patch v0.7/v0.8
