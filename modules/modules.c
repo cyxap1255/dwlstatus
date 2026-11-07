@@ -3,6 +3,11 @@
 #include <sys/utsname.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <arpa/inet.h>
+#include <linux/wireless.h>
 
 extern const char *net_int;
 
@@ -74,61 +79,94 @@ void output_battery(void) {
 }
 
 void output_cpu(void) {
-	char buff[256];
+	unsigned long long user, nice, system, idle, iowait, irq, softirq, steal;
+	unsigned long long user1, nice1, system1, idle1, iowait1, irq1, softirq1, steal1;
 	FILE *fp;
-	fp = popen("LC_ALL=C top -bn1 | grep \"Cpu(s)\" | awk '{print 100 - $8 \"%\"}'", "r");
+	fp = fopen("/proc/stat", "r");
+	fscanf(fp, "cpu %llu %llu %llu %llu %llu %llu %llu %llu", &user, &nice, &system, &idle, &iowait, &irq, &softirq, &steal);
+	unsigned long long idle_total2 = idle + iowait;
+	unsigned long long non_idle2 = user + nice + system + irq + softirq + steal;
+	unsigned long long total1 = idle_total2 + non_idle2;
+	fclose(fp);
+	sleep(1);
+	fp = fopen("/proc/stat", "r");
+	fscanf(fp, "cpu %llu %llu %llu %llu %llu %llu %llu %llu", &user1, &nice1, &system1, &idle1, &iowait1, &irq1, &softirq1, &steal1);
+	unsigned long long idle_total3 = idle1 + iowait1;
+	unsigned long long non_idle3 = user1 + nice1 + system1 + irq1 + softirq1 + steal1;
+	unsigned long long total2 = idle_total3 + non_idle3;
+	unsigned long long delta_idle = idle_total3 - idle_total2;
+	unsigned long long delta_total = total2 - total1;
+	fclose(fp);
+	double w = 0.0;
+	if (delta_total > 0) {
+		w = (double)(delta_total - delta_idle) / delta_total * 100.0;
+	}
+	printf("cpu: %.1f%%", w);
+}
+
+void output_wifi(void) {
+	struct iwreq inquiry;
+	char ssid[IW_ESSID_MAX_SIZE + 1] = {0};
+	int sock;
+	char interface[256];
+	char wifi_state[32] = "down";
+	snprintf(interface, sizeof(interface), "/sys/class/net/%s/operstate", net_int);
+	FILE *fp;
+	fp = fopen(interface, "r");
 	if (fp) {
-		if (fgets(buff, sizeof(buff), fp)) {
-			buff[strcspn(buff, "\r\n")] = 0;
-			printf("cpu: %s", buff);
+		if (fscanf(fp, "%31s", wifi_state) == 1) {
+			wifi_state[strcspn(wifi_state, "\n")] = 0;
 		}
-	pclose(fp);	
+		fclose(fp);
+	}
+	if (strcmp(wifi_state, "up") != 0) {
+		printf("net: n/a");
+		return;
+	} else {
+		sock = socket(AF_INET, SOCK_DGRAM, 0);
+		if (sock != -1) {
+			memset(&inquiry, 0, sizeof(inquiry));
+			strncpy(inquiry.ifr_name, net_int, IFNAMSIZ - 1);
+			inquiry.u.essid.pointer = ssid;
+			inquiry.u.essid.length = sizeof(ssid);
+			inquiry.u.essid.flags = 0;
+			if (ioctl(sock, SIOCGIWESSID, &inquiry) != -1 && strlen(ssid) > 0) {
+				printf("net: %s", ssid);
+			}
+	close(sock);	
+		}
 	}
 }
 
-void output_network_nmcli(void) {
-	char cmd[256];
-	char buff2[256];
-	snprintf(cmd, sizeof(cmd), "nmcli -g GENERAL.CONNECTION device show %s", net_int);
+void output_ethernet(void) {
+	struct ifreq inquiry2;
+	int sock2;
+	char interface2[256];
+	char ethernet_state[32] = "down";
+	snprintf(interface2, sizeof(interface2), "/sys/class/net/%s/operstate", net_int);
 	FILE *fp;
-	if ((fp = popen(cmd, "r"))) {
-		if (fgets(buff2, sizeof(buff2), fp)) {
-			buff2[strcspn(buff2, "\n")] = 0;
-			printf("net: %s", buff2);
+	fp = fopen(interface2, "r");
+	if (fp) {
+		if (fscanf(fp, "%31s", ethernet_state) == 1) {
+			ethernet_state[strcspn(ethernet_state, "\n")] = 0;
 		}
-		pclose(fp);
+		fclose(fp);
 	}
-}
-
-void output_network_wpa(void) {
-	char cmd2[256];
-	char buff3[256];
-	snprintf(cmd2, sizeof(cmd2), "wpa_cli -i %s status 2>/dev/null | grep '^ssid=' | cut -d= -f2", net_int);
-	FILE *fp;
-	if ((fp = popen(cmd2, "r"))) {
-		if (fgets(buff3, sizeof(buff3), fp)) {
-			buff3[strcspn(buff3, "\n")] = 0;
-			printf("net: %s", buff3);
+	if (strcmp(ethernet_state, "up") != 0) {
+		printf("net: n/a");
+		return;
+	} else {
+		sock2 = socket(AF_INET, SOCK_DGRAM, 0);
+		memset(&inquiry2, 0, sizeof(inquiry2));
+		strncpy(inquiry2.ifr_name, net_int, IFNAMSIZ - 1);
+		if (ioctl(sock2, SIOCGIFADDR, &inquiry2) != -1) {
+			struct sockaddr_in *ip_addr = (struct sockaddr_in *)&inquiry2.ifr_addr;
+			printf("net: %s", inet_ntoa(ip_addr->sin_addr));
 		}
-		pclose(fp);
 	}
+	close(sock2);
 }
-
-void output_network_iwctl(void) {
-	char cmd3[256];
-	char buff4[256];
-	snprintf(cmd3, sizeof(cmd3), "iwctl station %s show 2>/dev/null | grep 'Connected network' | awk '{print $3}'", net_int);
-	FILE *fp;
-	if ((fp = popen(cmd3, "r"))) {
-		if (fgets(buff4, sizeof(buff4), fp)) {
-			buff4[strcspn(buff4, "\n")] = 0;
-			printf("net: %s", buff4);
-		}
-		pclose(fp);
-	}
-}
-
-
+	
 void output_volume(void) {
 	FILE *fp;
 	char buff5[256];
@@ -137,7 +175,7 @@ void output_volume(void) {
 			buff5[strcspn(buff5, "\n")] = 0;
 			printf("vol: %s%%", buff5);
 		}
-		pclose(fp);
+		fclose(fp);
 	}
 }
 
