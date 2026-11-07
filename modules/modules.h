@@ -6,9 +6,8 @@ void output_kernel(void);
 void output_time(void);
 void output_battery(void);
 void output_cpu(void);
-void output_network_nmcli(void);
-void output_network_wpa(void);
-void output_network_iwctl(void);
+void output_ethernet(void);
+void output_wifi(void);
 void output_volume(void);
 void output_date(void);
 
