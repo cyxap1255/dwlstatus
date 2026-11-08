@@ -23,9 +23,9 @@ const char *net_int = "wlp0s20f3"; /* network interface */
 static const struct block blocks[] = { 
 	/*module*/   	/*space and character between module*/
 	{ output_wifi,                                  " | " },
-	{ output_cpu,					" | " },
-	{ output_ram, 					" | " },
-	{ output_time,					""    },
+	{ output_cpu,									" | " },
+	{ output_ram, 									" | " },
+	{ output_time,									""    },
 };
 
 #endif 
