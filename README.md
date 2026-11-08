@@ -1,7 +1,8 @@
 A slstatus alternative for dwl bar patch.
 link to [bar patch](https://codeberg.org/dwl/dwl-patches/src/commit/9e89b5823fe19f1b43e3add89934480850a02906/patches/bar).
 
-![glfetch screenshot](swappy-20261008_213755.png)
+![dwlstatus screenshot](swappy-20261008_213755.png)
+![dwlstatus2 screenshot](swappy-20261108_103927.png)
 
 # Installation
 
