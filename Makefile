@@ -3,7 +3,17 @@ CFLAGS = -Wall -Wextra -O3
 TARGET = dwlstatus
 PREFIX = /usr/local/bin
 
-SRCS = dwlstatus.c modules/modules.c
+SRCS = dwlstatus.c \
+       modules/battery.c \
+       modules/date.c \
+       modules/kernel.c \
+       modules/time.c \
+       modules/wifi_ssid.c \
+       modules/cpu_usage.c \
+       modules/ethernet_ssid.c \
+       modules/mem_usage.c \
+       modules/volume.c
+
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
