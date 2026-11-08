@@ -38,14 +38,15 @@ doas make uninstall && doas make clean
 - time
 - battery
 - cpu usage
-- network (ssid) (nmcli)
-- network (ssid) (wpa_supplicant)
-- network (ssid) (iwctl)
+- network (ssid) (ethernet)
+- network (ssid) (wifi)
 - volume
 - date
 - more soon..
+
 # Updates
 - added config.def.h file
+- all of modules uses linux-kernel files to show status on bar
 
 # Configuration
 - config.def.h - configuration file
