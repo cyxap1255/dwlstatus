@@ -1,5 +1,7 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O3
+CFLAGS   = -std=c99 -Wall -Wextra -Werror -Wshadow -Wformat=2 -pedantic -Os -march=native -flto
+CPPFLAGS = -D_FORTIFY_SOURCE=2 -D_DEFAULT_SOURCE -fstack-protector-strong
+LDFLAGS  = -flto -Wl,-z,relro,-z,now
 TARGET = dwlstatus
 PREFIX = /usr/local/bin
 
