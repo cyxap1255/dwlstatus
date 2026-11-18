@@ -56,10 +56,9 @@ doas make uninstall && doas make clean
 you need to make a session script like this:
 ```bash
 #!/bin/sh
-
 [ -p /tmp/dwl-bar ] || mkfifo /tmp/dwl-bar
 dwlstatus &
-exec dbus-run-session dwl < /tmp/dwl-bar
+cat /tmp/dwl-bar | dbus-run-session dwl
 ```
 after this add to your greetd or sddm this script as a startup script.
 
